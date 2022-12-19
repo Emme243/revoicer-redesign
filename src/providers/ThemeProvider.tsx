@@ -4,14 +4,17 @@ interface IThemeContext {
   theme: ITheme;
   osTheme: IOsTheme;
   setTheme: (osTheme: IOsTheme) => void;
+  themeOptions: IOsTheme[];
 }
 type ITheme = 'light' | 'dark';
-type IOsTheme = 'light' | 'dark' | 'system';
+export type IOsTheme = 'light' | 'dark' | 'system';
 
+const THEME_OPTIONS: IOsTheme[] = ['light', 'dark', 'system'];
 export const ThemeContext = createContext<IThemeContext>({
   theme: 'light',
   osTheme: 'system',
   setTheme: () => {},
+  themeOptions: THEME_OPTIONS,
 });
 
 function ThemeProvider({ children }: { children: ReactNode }) {
@@ -33,7 +36,7 @@ function ThemeProvider({ children }: { children: ReactNode }) {
 
     window
       .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', e => onOsThemeChange(e.matches ? 'dark' : 'light'));
+      .addEventListener('change', e => setTheme(e.matches ? 'dark' : 'light'));
   }, []);
 
   function onOsThemeChange(osColorMode: IOsTheme): void {
@@ -50,7 +53,9 @@ function ThemeProvider({ children }: { children: ReactNode }) {
   }, [preferredColorModeBySystem, osTheme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme: onOsThemeChange, osTheme }}>
+    <ThemeContext.Provider
+      value={{ theme, setTheme: onOsThemeChange, osTheme, themeOptions: THEME_OPTIONS }}
+    >
       {children}
     </ThemeContext.Provider>
   );
