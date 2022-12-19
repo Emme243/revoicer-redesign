@@ -1,9 +1,7 @@
 function App() {
   return (
-    <div>
-      <h2 className="py-12 text-2xl text-red-300 px-2 hover:text-4xl font-bold hover:text-primary-500">
-        Emmanuel
-      </h2>
+    <div className="text-dark-900 dark:bg-dark-900 dark:text-dark-100 min-h-screen">
+      <h2 className="">Emmanuel</h2>
     </div>
   );
 }
