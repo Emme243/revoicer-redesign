@@ -30,6 +30,13 @@ module.exports = {
           900: colors.sky[900],
         },
       },
+      fontfamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
+      boxShadow: {
+        raised: 'inset 0 1px 0 0 hsla(0,0%,100%,0.2),0 1px 2px hsla(0,0%,0%,0.2)',
+        image: 'inset 0 2px 4px 0 hsla(0,0%,0%,0.2)',
+      },
     },
   },
   plugins: [],

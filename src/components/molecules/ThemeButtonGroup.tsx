@@ -1,9 +1,9 @@
 import { useContext } from 'react';
-import { ITheme, ThemeContext } from '../providers/ThemeProvider';
+import { ITheme, ThemeContext } from '../../providers/ThemeProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun, faDesktop } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import DefaultLabel from './DefaultLabel';
+import DefaultLabel from '../atoms/DefaultLabel';
 
 function ThemeButtonGroup() {
   const { theme, setTheme, themeOptions } = useContext(ThemeContext);
