@@ -1,14 +1,14 @@
 import { useContext } from 'react';
-import { IOsTheme, ThemeContext } from '../providers/ThemeProvider';
+import { ITheme, ThemeContext } from '../providers/ThemeProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun, faDesktop } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import DefaultLabel from './DefaultLabel';
 
 function ThemeButtonGroup() {
-  const { osTheme, setTheme, themeOptions } = useContext(ThemeContext);
+  const { theme, setTheme, themeOptions } = useContext(ThemeContext);
 
-  function getThemeIcon(theme: IOsTheme): IconDefinition {
+  function getThemeIcon(theme: ITheme): IconDefinition {
     switch (theme) {
       case 'dark':
         return faMoon;
@@ -25,11 +25,10 @@ function ThemeButtonGroup() {
       <div className="border-dark-100 border rounded-lg overflow-hidden dark:border-dark-800 inline-block divide-dark-100 divide-x dark:divide-dark-800">
         {themeOptions.map(themeOption => (
           <button
-            aria-selected={osTheme === themeOption}
+            aria-selected={theme === themeOption}
             className="w-10 py-2 text-dark-500 hover:bg-gray-100 transition-all duration-200 aria-selected:text-sky-600 aria-selected:bg-sky-100 dark:hover:bg-dark-800 dark:aria-selected:bg-sky-800 dark:aria-selected:text-sky-100 dark:text-dark-300"
             key={themeOption}
             onClick={() => setTheme(themeOption)}
-            style={{ backgroundColor: themeOption }}
           >
             <FontAwesomeIcon icon={getThemeIcon(themeOption)} />
           </button>

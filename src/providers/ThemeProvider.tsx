@@ -1,61 +1,49 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode, useState } from 'react';
+import { useEvent, useLocalStorage, useMount } from 'react-use';
 
 interface IThemeContext {
   theme: ITheme;
-  osTheme: IOsTheme;
-  setTheme: (osTheme: IOsTheme) => void;
-  themeOptions: IOsTheme[];
+  setTheme: (theme: ITheme) => void;
+  themeOptions: ITheme[];
 }
-type ITheme = 'light' | 'dark';
-export type IOsTheme = 'light' | 'dark' | 'system';
+export type ITheme = 'light' | 'dark' | 'system';
 
-const THEME_OPTIONS: IOsTheme[] = ['light', 'dark', 'system'];
+const THEME_OPTIONS: ITheme[] = ['light', 'dark', 'system'];
 export const ThemeContext = createContext<IThemeContext>({
-  theme: 'light',
-  osTheme: 'system',
+  theme: 'system',
   setTheme: () => {},
   themeOptions: THEME_OPTIONS,
 });
 
 function ThemeProvider({ children }: { children: ReactNode }) {
-  const preferredColorModeBySystem = window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light';
+  const [theme, setTheme] = useState<ITheme>('system');
+  const [themeInLocalStorage, setThemeInLocalStorage] = useLocalStorage<ITheme>('theme', 'system');
 
-  const [theme, setTheme] = useState<ITheme>(preferredColorModeBySystem);
-  const [osTheme, setOsTheme] = useState<IOsTheme>('system');
+  useMount(() => {
+    setNewTheme(themeInLocalStorage || 'system');
+  });
+  useEvent('change', matchMediaListener, window.matchMedia('(prefers-color-scheme: dark)'));
 
-  function getValidTheme(osTheme: IOsTheme): IOsTheme {
-    return osTheme === 'light' || osTheme === 'dark' || osTheme === 'system' ? osTheme : 'system';
+  function matchMediaListener(): void {
+    if (theme === 'system') setThemeClassOnHtmlElement('system');
   }
-
-  useEffect(() => {
-    const themeFromLocalStorage = localStorage.getItem('theme') as IOsTheme;
-    const validTheme = getValidTheme(themeFromLocalStorage);
-    setOsTheme(validTheme);
-
-    window
-      .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', e => setTheme(e.matches ? 'dark' : 'light'));
-  }, []);
-
-  function onOsThemeChange(osColorMode: IOsTheme): void {
-    const validTheme = getValidTheme(osColorMode);
-    setOsTheme(validTheme);
-    localStorage.setItem('theme', validTheme);
+  function setNewTheme(theme: ITheme): void {
+    const validTheme = theme || 'system';
+    setTheme(validTheme);
+    setThemeInLocalStorage(validTheme);
+    setThemeClassOnHtmlElement(validTheme);
   }
-
-  useEffect(() => {
-    const theme = osTheme === 'system' ? preferredColorModeBySystem : osTheme;
-    setTheme(theme);
-    if (theme === 'dark') document.documentElement.classList.add('dark');
+  function setThemeClassOnHtmlElement(theme: ITheme): void {
+    const preferredThemeBySystem = window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+    const themeClass = theme === 'system' ? preferredThemeBySystem : theme;
+    if (themeClass === 'dark') document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
-  }, [preferredColorModeBySystem, osTheme]);
+  }
 
   return (
-    <ThemeContext.Provider
-      value={{ theme, setTheme: onOsThemeChange, osTheme, themeOptions: THEME_OPTIONS }}
-    >
+    <ThemeContext.Provider value={{ setTheme: setNewTheme, theme, themeOptions: THEME_OPTIONS }}>
       {children}
     </ThemeContext.Provider>
   );
