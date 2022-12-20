@@ -1,19 +1,19 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import { DetailedHTMLProps, LabelHTMLAttributes, ReactNode } from 'react';
 
 type ILabelProps = {
   children: ReactNode;
-} & HTMLAttributes<HTMLDivElement>;
+} & DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>;
 
-function Label(props: ILabelProps) {
+function DefaultLabel(props: ILabelProps) {
   const { children, ...htmlProps } = props;
   return (
-    <div
+    <label
       {...htmlProps}
       className={`text-gray-500 font-semibold uppercase text-sm tracking-widest dark:text-gray-300 ${htmlProps.className}`}
     >
       {children}
-    </div>
+    </label>
   );
 }
 
-export default Label;
+export default DefaultLabel;

@@ -3,7 +3,7 @@ import { IOsTheme, ThemeContext } from '../providers/ThemeProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun, faDesktop } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import Label from './Label';
+import DefaultLabel from './DefaultLabel';
 
 function ThemeButtonGroup() {
   const { osTheme, setTheme, themeOptions } = useContext(ThemeContext);
@@ -21,8 +21,8 @@ function ThemeButtonGroup() {
 
   return (
     <>
-      <Label>Theme</Label>
-      <div className="border-dark-100 border-2 rounded-lg overflow-hidden dark:border-dark-800 inline-block divide-dark-100 divide-x dark:divide-dark-800">
+      <DefaultLabel className="block">Theme</DefaultLabel>
+      <div className="border-dark-100 border rounded-lg overflow-hidden dark:border-dark-800 inline-block divide-dark-100 divide-x dark:divide-dark-800">
         {themeOptions.map(themeOption => (
           <button
             aria-selected={osTheme === themeOption}
